@@ -24,8 +24,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -64,6 +69,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 fun LoginScreen(
     innerPadding: PaddingValues,
     navController: NavController,
+    snackbarHostState: SnackbarHostState,
     viewModel:AuthViewModel = hiltViewModel()
 ) {
     var email by remember {
@@ -75,7 +81,22 @@ fun LoginScreen(
     var isPasswordVisible by remember {
         mutableStateOf(false)
     }
-    val state = viewModel.loginState
+    val state = viewModel.loginState.value
+    val snackbarMessage = viewModel.snackbarMessage.value
+    LaunchedEffect(snackbarMessage) {
+        snackbarMessage?.let {
+            snackbarHostState.showSnackbar(it)
+            viewModel.clearSnackbar()
+        }
+    }
+    LaunchedEffect(state.isLogged) {
+        if (state.isLogged) {
+            navController.navigate(Screens.Home.route) {
+                popUpTo(Screens.Login.route) { inclusive = true }
+            }
+        }
+    }
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -155,20 +176,9 @@ fun LoginScreen(
                     navController.navigate(Screens.Register.route)
                 })
         }
-        if(state.value.isLoading){
+        if(state.isLoading){
             CircularProgressIndicator()
         }
     }
 
-}
-
-@Preview(
-    showBackground = true,
-    showSystemUi = true
-)
-@Composable
-fun LoginScreenPreview() {
-    TaskAppTheme {
-        LoginScreen(innerPadding = PaddingValues(0.dp), navController = rememberNavController())
-    }
 }

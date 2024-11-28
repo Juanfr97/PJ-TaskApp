@@ -7,8 +7,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,13 +36,21 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val sharedPref = SharedPref(LocalContext.current)
                 val isLogged = sharedPref.getIsLoggedSharedPref()
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                val snackbarHostState = remember { SnackbarHostState() }
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+                ) { innerPadding ->
                     NavHost(
                         navController = navController,
                         startDestination = if (isLogged) Screens.Home.route else Screens.Login.route
                     ) {
                         composable(route = Screens.Login.route) {
-                            LoginScreen(innerPadding = innerPadding, navController = navController)
+                            LoginScreen(
+                                innerPadding = innerPadding,
+                                navController = navController,
+                                snackbarHostState = snackbarHostState
+                            )
                         }
                         composable(route = Screens.Home.route) {
                             HomeScreen(innerPadding = innerPadding, navController = navController)

@@ -7,5 +7,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
     suspend fun login(login: Auth) : Flow<ApiResponse<AuthResponse>>
-
+    suspend fun register(register:Auth) : Flow<ApiResponse<AuthResponse>>
 }

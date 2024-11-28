@@ -12,23 +12,47 @@ import kotlinx.coroutines.flow.flow
 class AuthRepositoryImpl(
     private val authService: AuthService
 ) : AuthRepository {
-    override suspend fun login(login: Auth): Flow<ApiResponse<AuthResponse>> =flow {
+
+    companion object {
+        private const val TAG = "AuthRepository"
+        private const val ERROR_LOGIN = "Error al iniciar sesión"
+        private const val ERROR_REGISTER = "Error al registrarse"
+        private const val ERROR_GENERIC = "Ocurrió un error"
+        private const val ERROR_INVALID_CREDENTIALS = "Usuario o contraseña incorrectos"
+    }
+
+    override suspend fun login(login: Auth): Flow<ApiResponse<AuthResponse>> =
+        performRequest(
+            request = { authService.login(login) },
+            errorMessage = ERROR_LOGIN
+        )
+
+    override suspend fun register(register: Auth): Flow<ApiResponse<AuthResponse>> =
+        performRequest(
+            request = { authService.createUser(register) },
+            errorMessage = ERROR_REGISTER
+        )
+
+    private suspend fun performRequest(
+        request: suspend () -> retrofit2.Response<AuthResponse>,
+        errorMessage: String
+    ): Flow<ApiResponse<AuthResponse>> = flow {
         try {
             emit(ApiResponse.Loading())
-            val loginResponse = authService.login(login)
+            val response = request()
 
-            if(loginResponse.isSuccessful){
-                emit(ApiResponse.Success(loginResponse.body()!!))
-            }
-            else if(loginResponse.code() == 404){
-                emit(ApiResponse.Error("Usuario o contraseña incorrectos"))
-            }
-            else{
-                emit(ApiResponse.Error("Ocurrió un error"))
+            when {
+                response.isSuccessful -> {
+                    response.body()?.let {
+                        emit(ApiResponse.Success(it))
+                    } ?: emit(ApiResponse.Error(ERROR_GENERIC))
+                }
+                response.code() == 404 -> emit(ApiResponse.Error(ERROR_INVALID_CREDENTIALS))
+                else -> emit(ApiResponse.Error(ERROR_GENERIC))
             }
         } catch (e: Exception) {
-            Log.i("AuthRepository", "invoke: ${e.message}")
-            emit(ApiResponse.Error("Error al iniciar sesion"))
+            Log.e(TAG, "$errorMessage: ${e.message}", e)
+            emit(ApiResponse.Error(errorMessage))
         }
     }
 }
