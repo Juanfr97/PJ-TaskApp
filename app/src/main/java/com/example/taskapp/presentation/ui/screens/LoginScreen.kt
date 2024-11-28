@@ -24,53 +24,39 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.taskapp.R
-import com.example.taskapp.datasource.services.AuthService
 import com.example.taskapp.domain.dtos.Auth
-import com.example.taskapp.domain.use_cases.SharedPref
 import com.example.taskapp.presentation.events.AuthEvent
-import com.example.taskapp.presentation.ui.theme.TaskAppTheme
 import com.example.taskapp.presentation.utils.Lock
 import com.example.taskapp.presentation.utils.Visibility
 import com.example.taskapp.presentation.utils.Visibility_off
 import com.example.taskapp.presentation.viewmodels.AuthViewModel
 import com.example.taskapp.utils.Screens
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 @Composable
 fun LoginScreen(
     innerPadding: PaddingValues,
     navController: NavController,
     snackbarHostState: SnackbarHostState,
-    viewModel:AuthViewModel = hiltViewModel()
+    viewModel: AuthViewModel = hiltViewModel()
 ) {
     var email by remember {
         mutableStateOf("")
@@ -112,7 +98,7 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                "PJ Task",
+                stringResource(id = R.string.app_name),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onBackground
             )
@@ -124,7 +110,7 @@ fun LoginScreen(
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                placeholder = { Text(text = "Correo electronico") },
+                placeholder = { Text(text = stringResource(id = R.string.email)) },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(24.dp),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -139,7 +125,7 @@ fun LoginScreen(
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                placeholder = { Text(text = "Contraseña") },
+                placeholder = { Text(text = stringResource(id = R.string.password)) },
                 visualTransformation = if (!isPasswordVisible) PasswordVisualTransformation() else VisualTransformation.None,
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(24.dp),
@@ -154,7 +140,7 @@ fun LoginScreen(
                     IconButton(onClick = {
                         isPasswordVisible = !isPasswordVisible
                     }) {
-                        val icon = if(!isPasswordVisible) Visibility else Visibility_off
+                        val icon = if (!isPasswordVisible) Visibility else Visibility_off
                         Icon(imageVector = icon, contentDescription = "visibility")
                     }
                 }
@@ -165,18 +151,18 @@ fun LoginScreen(
                 onClick = {
                     viewModel.onEvent(AuthEvent.onLogin(Auth(email = email, password = password)))
                 }) {
-                Text("Iniciar sesion")
+                Text(stringResource(id = R.string.login))
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "¿No tienes una cuenta? Crea una",
+                text = stringResource(id = R.string.create_new_account),
                 color = Color.Gray,
                 modifier = Modifier.clickable {
                     Log.i("Login", "Navegar")
                     navController.navigate(Screens.Register.route)
                 })
         }
-        if(state.isLoading){
+        if (state.isLoading) {
             CircularProgressIndicator()
         }
     }

@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">TaskApp</string>
+    <string name="app_name">PJ Task</string>
+    <string name="email">Correo Electronico</string>
+    <string name="password">Contraseña</string>
+    <string name="confirm_password">Confirmar contraseña</string>
+    <string name="register">Registrarse</string>
+    <string name="passwords_not_equal">Las contraseñas no coinciden</string>
+    <string name="login">Iniciar sesion</string>
+    <string name="create_new_account">¿No tienes una cuenta? Crea una</string>
+    <string name="empty_password_email">"Correo o contraseña no pueden estar vacíos"</string>
 </resources>

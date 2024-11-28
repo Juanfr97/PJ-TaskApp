@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -102,7 +103,7 @@ fun RegisterScreen(
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
                     Text(
-                        text = "Correo Electronico"
+                        text = stringResource(id = R.string.email)
                     )
                 },
                 shape = RoundedCornerShape(24.dp),
@@ -125,7 +126,7 @@ fun RegisterScreen(
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
                     Text(
-                        text = "Contraseña"
+                        text = stringResource(id = R.string.password)
                     )
                 },
                 shape = RoundedCornerShape(24.dp),
@@ -150,7 +151,7 @@ fun RegisterScreen(
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
                     Text(
-                        text = "Confirmar contraseña"
+                        text = stringResource(id = R.string.confirm_password)
                     )
                 },
                 shape = RoundedCornerShape(24.dp),
@@ -181,10 +182,10 @@ fun RegisterScreen(
                     )
                 }, enabled = isPasswordValid
             ) {
-                Text(text = "Registrarse")
+                Text(text = stringResource(id = R.string.register))
             }
-            if (!isPasswordValid) {
-                Text(text = "Las contraseñas no coincident", color = Color.Red)
+            if (!isPasswordValid && (password.isNotBlank() || confirmPassword.isNotBlank())) {
+                Text(text = stringResource(id = R.string.passwords_not_equal), color = Color.Red)
             }
         }
         if (state.isLoading) {
