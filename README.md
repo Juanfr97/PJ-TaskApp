@@ -6,8 +6,6 @@
 
 ## **Key Features**
 - 📋 **Task Management**: Create, edit, and delete tasks effortlessly.
-- 🔔 **Notifications**: Receive reminders to ensure you never miss a task.
-- 📅 **Custom Views**: Access daily, weekly, or monthly task views.
 - 💡 **Modern Design**: Developed with Jetpack Compose for a smooth and visually appealing experience.
 - ☁️ **Synchronization**: (Coming soon) Sync tasks across devices.
 - 🌐 **API Integration**: Connects with the API at [Task API](https://taskapi.juanfrausto.com/swagger/index.html) for backend operations.
@@ -62,16 +60,16 @@ This app uses the **[Task API](https://taskapi.juanfrausto.com/swagger/index.htm
 ### **1. Clone the Repository**
 Clone this project to your local machine using the following command:
 ```bash
-git clone https://github.com/your-repo/pj-task.git
+git clone git@github.com:Juanfr97/PJ-TaskApp.git
 ```
 
-## 2. Set Up the Environment**
+## **2. Set Up the Environment**
 
    •	Ensure you have Android Studio (version Dolphin or later) installed.
    •	Import the project into Android Studio.
    •	Sync the dependencies using Gradle.
 
-### 3. Run the Application**
+### **3. Run the Application**
 
    •	Select an emulator or physical device.
    •	Click on the Run button in Android Studio.
