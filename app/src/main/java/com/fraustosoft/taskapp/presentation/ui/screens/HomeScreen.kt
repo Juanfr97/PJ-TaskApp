@@ -107,6 +107,7 @@ fun HomeScreen(innerPadding: PaddingValues, navController: NavController) {
     val selectedDate = datePickerState.selectedDateMillis?.let {
         convertMillisToDate(it)
     } ?: ""
+    val isValidTask = title.isNotBlank() && description.isNotBlank() && selectedDate.isNotEmpty()
     var refreshKey by remember { mutableStateOf(0) }
     LaunchedEffect(key1 = refreshKey) {
         scope.launch(Dispatchers.IO) {
@@ -300,7 +301,9 @@ fun HomeScreen(innerPadding: PaddingValues, navController: NavController) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 DatePicker(state = datePickerState)
-                Button(onClick = {
+                Button(
+                    enabled = isValidTask,
+                    onClick = {
                     showBottomSheet = false
                     scope.launch(Dispatchers.IO) {
                         val taskService = Retrofit.Builder()
@@ -332,9 +335,9 @@ fun HomeScreen(innerPadding: PaddingValues, navController: NavController) {
 }
 
 fun convertMillisToDate(millis: Long): String {
-    val oneDayInMillis = 24 * 60 * 60 * 1000 // Milisegundos en un día
+    val oneDayInMillis = 24 * 60 * 60 * 1000
     val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    formatter.timeZone = TimeZone.getDefault() // Asegúrate de usar la zona horaria local
+    formatter.timeZone = TimeZone.getDefault()
     return formatter.format(Date(millis + oneDayInMillis))
 }
 
